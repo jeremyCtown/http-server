@@ -1,7 +1,6 @@
 from http.server import HTTPServer, BaseHTTPRequestHandler
 from urllib.parse import urlparse, parse_qs
 import json
-# import sys
 
 
 class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
@@ -28,7 +27,7 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
 
             self.send_response(200)
             self.end_headers()
-            self.wfile.write(b'we did the thing with the qs')
+            self.wfile.write(cat)
             return
 
         else:
@@ -53,7 +52,6 @@ def run_forever():
     except KeyboardInterrupt:
         server.shutdown()
         server.server_close()
-        # sys.exit()
 
 
 if __name__ == '__main__':
