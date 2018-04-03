@@ -1,3 +1,4 @@
 {
+  "test_server.py::test_server_sends_qs_back": true,
   "test_server.py::test_server_sends_response": true
 }

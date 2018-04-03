@@ -1,4 +1,4 @@
-import server
+from src import server
 import pytest
 from threading import Thread
 
@@ -11,4 +11,3 @@ def server_setup():
     process.setDaemon(True)
 
     process.start()
-    

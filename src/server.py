@@ -1,6 +1,14 @@
 from http.server import HTTPServer, BaseHTTPRequestHandler
 from urllib.parse import urlparse, parse_qs
 import json
+from cowpy import cow
+
+ren = cow.Ren()
+ren_msg = ren.milk('You steenkin eeeediot')
+# print(ren_msg)
+stimpy = cow.Stimpy()
+errr = cow.Cheese()
+errr_msg = errr.milk('I am Errr.. You can query this site using /cow?msg="text" as an endpoint ')
 
 
 class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
@@ -10,16 +18,38 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
         parsed_qs = parse_qs(parsed_path.query)
 
         if parsed_path.path == '/':
-
             self.send_response(200)
             self.end_headers()
-            self.wfile.write(b'You did a thing!')
+            self.wfile.write(b"""
+            <!DOCTYPE html>
+<html>
+<head>
+    <title> cowsay </title>
+</head>
+<body>
+    <header>
+        <nav>
+        <ul>
+            <li><a href="/cowsay">cowsay</a></li>
+        </ul>
+        </nav>
+    <header>
+    <main>
+        <!-- project description -->
+    </main>
+</body>
+</html>
+""")
             return
-        elif parsed_path.path == '/test':
+        elif parsed_path.path == '/cowsay':
+            self.send_response(200)
+            self.end_headers()
+            self.wfile.write(errr_msg.encode('utf8'))
+        elif parsed_path.path == '/cow':
             try:
-                cat = json.loads(parsed_qs['category'][0])
+                msg = json.loads(parsed_qs['msg'][0])
                 
-            except KeyError:
+            except (KeyError, json.decoder.JSONDecoderError):
                 self.send_response(400)
                 self.end_headers()
                 self.wfile.write(b'You did a bad thing')
@@ -27,7 +57,7 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
 
             self.send_response(200)
             self.end_headers()
-            self.wfile.write(cat)
+            self.wfile.write(stimpy.milk(msg).encode('utf8'))
             return
 
         else:
@@ -36,8 +66,9 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
             self.wfile.write(b'Not Found')
 
     def do_POST(self):
-        pass
-
+        self.send_response(200)
+        self.end_headers()
+        self.send_response_only()
 
 def create_server():
     return HTTPServer(('127.0.0.1', 3000), SimpleHTTPRequestHandler)
