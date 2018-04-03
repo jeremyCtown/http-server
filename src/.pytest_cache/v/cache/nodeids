@@ -1,0 +1,5 @@
+[
+  "test_server.py::test_server_sends_200_response",
+  "test_server.py::test_server_sends_404_response",
+  "test_server.py::test_server_sends_qs_back"
+]
