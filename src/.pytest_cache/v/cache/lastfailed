@@ -1,5 +1,3 @@
 {
-  "test_server.py::test_server_post_status_code": true,
-  "test_server.py::test_server_post_text": true,
   "test_server.py::test_server_sends_response": true
 }
