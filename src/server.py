@@ -50,7 +50,7 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
             try:
                 msg = json.loads(parsed_qs['msg'][0])
                 
-            except (KeyError, json.decoder.JSONDecoderError):
+            except (KeyError, json.decoder.JSONDecodeError):
                 self.send_response(400)
                 self.end_headers()
                 self.wfile.write(ren_msg.encode('utf8'))
