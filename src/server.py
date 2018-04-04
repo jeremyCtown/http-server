@@ -3,13 +3,9 @@ from urllib.parse import urlparse, parse_qs
 import json
 from cowpy import cow
 
-ren = cow.Ren()
-ren_msg = ren.milk('400 Error!?! You steenkin eeeediot')
-# print(ren_msg)
+ren_msg = cow.Ren().milk('400 Error!?! You steenkin eeeediot')
 stimpy = cow.Stimpy()
-errr = cow.Cheese()
-errr_msg = errr.milk('I am Errr.. You can query this site using /cow?msg="text" as an endpoint ')
-post_dict = {'content': None}
+errr_msg = cow.Cheese().milk('I am Errr.. You can query this site using /cow?msg="text" as an endpoint ')
 
 
 class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
@@ -41,7 +37,6 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
 </body>
 </html>
 """)
-            return
         elif parsed_path.path == '/cowsay':
             self.send_response(200)
             self.end_headers()
@@ -58,8 +53,7 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
 
             self.send_response(200)
             self.end_headers()
-            self.wfile.write(stimpy.milk(msg).encode('utf8'))
-            return
+            self.wfile.write(stimpy.milk(msg + '. Happy Happy! Joy Joy!').encode('utf8'))
 
         else:
             self.send_response(404)
@@ -72,9 +66,10 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
 
         if parsed_path.path == '/cow':
             try:
-                msg = parsed_qs['msg'][0]
-                msg_json = stimpy.milk(msg)
-                post_dict['content'] = msg_json
+                content_length = int(self.headers['Content-Length'])
+                body = json.loads(self.rfile.read(content_length).decode('utf8'))
+
+                msg_json = stimpy.milk(body['msg'])
                 
             except (KeyError, json.decoder.JSONDecodeError):
                 self.send_response(400)
@@ -84,14 +79,14 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
      
             self.send_response(200)
             self.end_headers()
-            self.wfile.write(json.dumps(post_dict).encode('utf8'))
+            self.wfile.write(json.dumps({'content': msg_json}).encode('utf8'))
             return
         else:
             self.send_response(404)
             self.end_headers()
             self.wfile.write(b'404 Not Found')
 
-    
+ 
 def create_server():
     return HTTPServer(('127.0.0.1', 3000), SimpleHTTPRequestHandler)
 

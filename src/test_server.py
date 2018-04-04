@@ -56,7 +56,6 @@ def test_server_cow_get_text():
 
 def test_server_post_status_code():
     response = requests.post('http://127.0.0.1:3000/cow?msg="This is so fumb"')
-    # import pdb; pdb.set_trace()
     assert response.status_code == 200
 
 
