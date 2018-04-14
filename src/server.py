@@ -43,7 +43,7 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
             self.wfile.write(errr_msg.encode('utf8'))
         elif parsed_path.path == '/cow':
             try:
-                msg = json.loads(parsed_qs['msg'][0])
+                msg = parsed_qs['msg'][0]
                 
             except (KeyError, json.decoder.JSONDecodeError):
                 self.send_response(400)
@@ -53,7 +53,7 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
 
             self.send_response(200)
             self.end_headers()
-            self.wfile.write(stimpy.milk(msg + '. Happy Happy! Joy Joy!').encode('utf8'))
+            self.wfile.write(stimpy.milk(msg).encode('utf8'))
 
         else:
             self.send_response(404)
@@ -66,21 +66,21 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
 
         if parsed_path.path == '/cow':
             try:
-                content_length = int(self.headers['Content-Length'])
-                body = json.loads(self.rfile.read(content_length).decode('utf8'))
-
-                msg_json = stimpy.milk(body['msg'])
+                msg = parsed_qs['msg'][0]
+                msg_json = stimpy.milk('msg')
+                post_dict = {}
+                post_dict['content'] = msg_json
+                self.send_response(200)
+                self.end_headers()
+                self.wfile.write(json.dumps(post_dict).encode('utf8'))
+                return
                 
             except (KeyError, json.decoder.JSONDecodeError):
                 self.send_response(400)
                 self.end_headers()
                 self.wfile.write(ren_msg.encode('utf8'))
                 return
-     
-            self.send_response(200)
-            self.end_headers()
-            self.wfile.write(json.dumps({'content': msg_json}).encode('utf8'))
-            return
+
         else:
             self.send_response(404)
             self.end_headers()
