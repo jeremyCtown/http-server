@@ -11,6 +11,9 @@ errr_msg = cow.Cheese().milk('I am Errr.. You can query this site using /cow?msg
 class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
     
     def do_GET(self):
+        """
+        This GET request checks endpoints and returns a cow object with a message
+        """
         parsed_path = urlparse(self.path)
         parsed_qs = parse_qs(parsed_path.query)
 
@@ -61,6 +64,9 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
             self.wfile.write(b'404 Not Found')
 
     def do_POST(self):
+        """
+        Takes post from client and prints out info
+        """
         parsed_path = urlparse(self.path)
         parsed_qs = parse_qs(parsed_path.query)
 
@@ -88,10 +94,16 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
 
  
 def create_server():
+    """
+    Creates a server
+    """
     return HTTPServer(('127.0.0.1', 3000), SimpleHTTPRequestHandler)
 
 
 def run_forever():
+    """
+    Allows server to continue running after initial client request
+    """
     server = create_server()
 
     try:
